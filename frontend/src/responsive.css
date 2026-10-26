@@ -1,0 +1,141 @@
+/* Shared small-screen layout and touch targets. Page-specific form rules live beside each page. */
+html { min-width: 320px; }
+body { min-width: 320px; overflow-x: hidden; }
+button, input, select, textarea { max-width: 100%; }
+img, svg, canvas { max-width: 100%; }
+.main, .content, .panel, .dashboard-grid > *, .utilities-grid > *, .tenant-admin-grid > * { min-width: 0; }
+.mobile-nav-toggle, .mobile-nav-close, .nav-scrim { display: none; }
+.topbar-signout {
+  min-height: 36px;
+  padding: 0 11px;
+  border: 1px solid #e2e4e9;
+  border-radius: 6px;
+  background: #fff;
+  color: #5d58cb;
+  font: 600 10px 'DM Sans', sans-serif;
+  cursor: pointer;
+}
+.help-page-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+@media (max-width: 760px) {
+  .sidebar {
+    width: min(84vw, 310px);
+    padding: max(18px, env(safe-area-inset-top)) 14px max(20px, env(safe-area-inset-bottom));
+    transform: translateX(-105%);
+    transition: transform 180ms ease;
+    z-index: 21;
+    overflow-y: auto;
+    box-shadow: 12px 0 30px #2222;
+  }
+  .sidebar.is-open { transform: translateX(0); }
+  .sidebar .brand { padding: 0 10px 22px; }
+  .sidebar .brand > span:last-child { display: block; }
+  .sidebar .workspace { display: flex; margin-bottom: 20px; }
+  .sidebar .nav-label { display: block; }
+  .sidebar .tools-label { display: block; }
+  .sidebar nav { gap: 3px; }
+  .sidebar .nav-item,
+  .sidebar .nav-item:not(.active) {
+    display: flex;
+    height: 44px;
+    justify-content: flex-start;
+    padding: 0 11px;
+    font-size: 12px;
+  }
+  .sidebar .nav-icon { font-size: 17px; }
+  .sidebar .help-card { display: block; }
+  .sidebar .profile { justify-content: flex-start; }
+  .sidebar .profile span:not(.avatar) { display: block; min-width: 0; overflow-wrap: anywhere; }
+  .sidebar .profile .signout { display: block; }
+  .mobile-nav-close {
+    display: grid;
+    position: absolute;
+    right: 11px;
+    top: max(10px, env(safe-area-inset-top));
+    width: 38px;
+    height: 38px;
+    place-items: center;
+    border: 1px solid #eeeff2;
+    border-radius: 8px;
+    background: #fff;
+    color: #666a75;
+    font-size: 24px;
+  }
+  .nav-scrim {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 20;
+    border: 0;
+    background: #17182773;
+  }
+  .main { margin-left: 0; padding-bottom: env(safe-area-inset-bottom); }
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    height: 56px;
+    gap: 10px;
+    padding: 0 max(14px, env(safe-area-inset-right)) 0 max(14px, env(safe-area-inset-left));
+  }
+  .mobile-nav-toggle {
+    display: grid;
+    width: 40px;
+    height: 40px;
+    flex: 0 0 40px;
+    place-items: center;
+    border: 1px solid #e9ebef;
+    border-radius: 8px;
+    background: #fff;
+    color: #555965;
+    font-size: 17px;
+  }
+  .breadcrumbs { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .top-actions { margin-left: auto; }
+  .topbar-signout { min-height: 40px; }
+  .content { padding: 22px 16px calc(24px + env(safe-area-inset-bottom)); }
+  .page-heading { align-items: flex-start; gap: 12px; flex-wrap: wrap; }
+  .page-heading > div { min-width: 0; }
+  .page-heading h1 { overflow-wrap: anywhere; }
+  .heading-actions { flex-wrap: wrap; }
+  .heading-actions .button { min-height: 40px; }
+  .section-head, .ledger-section-head { gap: 10px; flex-wrap: wrap; }
+  .panel-head { gap: 10px; flex-wrap: wrap; }
+  .panel-head > div { min-width: 0; }
+  .button { min-height: 40px; }
+  .dashboard-grid { grid-template-columns: minmax(0, 1fr); }
+  .summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .property-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .tenant-portal { width: 100%; padding-left: 0; padding-right: 0; }
+  .help-contents > div { gap: 10px 12px; }
+}
+
+@media (max-width: 480px) {
+  .topbar { padding-right: 12px; padding-left: 12px; }
+  .top-actions { gap: 7px; }
+  .top-avatar { display: none; }
+  .content { padding-right: 12px; padding-left: 12px; }
+  .page-heading h1 { font-size: 21px; }
+  .page-heading p { line-height: 1.5; }
+  .summary-grid { gap: 8px; }
+  .metric { min-width: 0; padding: 10px; }
+  .metric strong { font-size: 17px; overflow-wrap: anywhere; }
+  .property-grid { grid-template-columns: minmax(0, 1fr); }
+  .panel { padding: 13px; }
+  .tenant-portal .page-heading { gap: 10px; }
+  .tenant-ledger { padding-right: 12px; padding-left: 12px; }
+  .tenant-ledger-row { align-items: flex-start; flex-wrap: wrap; }
+  .tenant-ledger-row > span { min-width: 0; overflow-wrap: anywhere; }
+  .tenant-ledger-row > span:last-child { margin-left: auto; }
+  .tenant-payment-actions { flex-wrap: wrap; justify-content: flex-end; }
+  .tenant-deposit-row { overflow-wrap: anywhere; }
+  .help-contents > div { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .help-contents a { overflow-wrap: anywhere; }
+  .help-document pre { max-width: 100%; }
+  .property-actions { margin-left: 0; }
+  .deposit-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sidebar { transition: none; }
+}

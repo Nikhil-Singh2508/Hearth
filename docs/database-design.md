@@ -1,0 +1,19 @@
+# Database design
+
+Migrations implement `users`, `login_sessions`, `tenant_profiles`, `tenant_invitations`, `properties`, `units`, `tenancies`, `tenancy_tenants`, `rent_terms`, `charges`, `payments`, `payment_allocations`, `tenant_credits`, `credit_allocations`, and `audit_logs`. UUID primary keys avoid exposing sequential identifiers. Email is unique; a unit number is unique within its property. Property archival is soft archival. Audit rows identify actor, action and target while avoiding sensitive change payloads.
+
+Tenancy periods are half-open `[start_date, end_date)`, so a new tenancy may begin on the prior tenancy's move-out date. A PostgreSQL GiST exclusion constraint prevents overlapping active periods on one unit. Rent terms use the same period convention and cannot overlap within a tenancy. Invitations store only the SHA-256 hash of a cryptographically random, single-use token. Partial indexes prevent duplicate pending invitations and multiple current primary tenant rows. The service creates one primary participant when it creates a tenancy.
+
+The ledger schema stores positive charges and payments in `NUMERIC(12,2)`, unique monthly rent charges, idempotent payment keys, immutable allocation rows, and overpayments as separate traceable credits. Utility bill allocations create ledger charges in one transaction and must sum exactly to the bill. Property expenses are separate owner costs. Service methods lock financial rows before allocation and calculate balances from allocation history. Corrections to posted financial entries must use audited reversal records. Money must use `Decimal` and centralized `ROUND_HALF_UP` rounding to INR paise. Posted records should be reversed, never edited or deleted.
+
+Inspections are tenancy scoped. `inspections` records move-in/move-out date, visibility and completion state; `inspection_items` records condition findings; `inspection_media` stores private evidence metadata and opaque storage keys. File bytes remain outside the database and are only served after owner or explicitly shared tenant authorization.
+
+Late fee rules are effective-dated per tenancy. `late_fee_assessments` stores one immutable assessment per rent charge and date, references the exact rule, records the rent principal/basis and cumulative target, and optionally points to the resulting ledger charge. The assessment is unique by rent charge/date. Fee charges are ordinary positive ledger charges, but assessment queries only select rent charges, preventing fees on fees.
+
+Utility metering adds `utility_meters`, effective-dated `utility_rates`, and append-only `utility_meter_readings`. Each reading optionally references the preceding reading and the applied rate, snapshots consumption and calculated amount, and links to the pending utility bill it generated. Bills continue to use the existing manually reconciled allocation workflow before ledger charges are posted.
+
+Tenant communication preferences live in `tenant_notification_preferences`; channels default off, and WhatsApp requires a phone number plus a consent timestamp. `notification_consent_events` records each grant/revoke and consent text version without copying the phone into audit data. When configured, Resend and Meta Cloud API send payment receipts only to tenants who opted into that channel.
+
+Tenancy document and inspection evidence rows keep opaque storage keys plus original names, MIME types and sizes. Bytes can live in the local private directory or a private Supabase Storage bucket; the API authorizes each download before reading the object.
+
+The deployment stores timestamps in UTC. Billing dates are derived using each property's IANA timezone and the agreement's due day. Object storage keys must remain opaque and private; only metadata and typed relationships belong in the relational database.

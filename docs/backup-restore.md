@@ -1,0 +1,5 @@
+# Backup and restore
+
+The Compose PostgreSQL volume is local development storage, not a backup. For a deployed database, schedule encrypted `pg_dump --format=custom` backups to access-controlled storage, retain a documented rotation policy, and back up private Storage objects separately. Supabase database backups do not include Storage object bytes; the database stores object metadata while file contents live in the Storage service. Keep encryption keys separate from backup artifacts. Test restoration periodically into an isolated disposable database and bucket, then verify row counts and uploaded-object availability before treating a backup as usable. Never run restore commands against production without an approved operational procedure. See the [Supabase setup and storage notes](supabase-setup.md).
+
+Retention periods and deletion obligations depend on jurisdiction and contract. The operator must set an explicit retention schedule with qualified counsel before production use; financial history may need long-term retention while identity documents should be minimized and deleted when lawful.
