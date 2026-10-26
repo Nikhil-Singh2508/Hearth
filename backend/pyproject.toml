@@ -1,3 +1,19 @@
+[project]
+name = "hearth-rental-api"
+version = "0.1.0"
+requires-python = ">=3.12,<3.15"
+dependencies = [
+    "fastapi==0.115.12",
+    "uvicorn[standard]==0.34.0",
+    "SQLAlchemy==2.0.39",
+    "alembic==1.15.2",
+    "psycopg[binary]==3.2.6",
+    "argon2-cffi==23.1.0",
+    "pydantic-settings==2.8.1",
+    "email-validator==2.2.0",
+    "supabase==2.32.0",
+]
+
 [tool.ruff]
 line-length = 100
 target-version = "py311"
